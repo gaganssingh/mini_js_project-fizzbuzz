@@ -26,6 +26,19 @@ h6 {
   color: var(--primary-color);
 }
 
+.fizz {
+  color: green;
+}
+
+.buzz {
+  color: blue;
+}
+
+.fizzbuzz {
+  color: red;
+  font-weight: bold;
+}
+
 footer {
   padding-right: 1rem;
 }
