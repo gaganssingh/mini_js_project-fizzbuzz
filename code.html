@@ -97,23 +97,226 @@
           <div class="col-lg-8">
             <pre class="line-numbers">
               <code class="language-javascript">
-                // Call Function
-                const helloWorld = () => {
-                  alert("Hello World");
+                // **************
+                // DOM SELECTORS
+                // **************
+                const submitBtn = document.getElementById("submitBtn");
+                const alertBox = document.getElementById("alertBox");
+                const alertHeading = document.getElementById("alertHeading");
+                const alertMsg = document.getElementById("alertMsg");
+                const resultsTable = document.getElementById("results");
+
+                // **************
+                // FUNCTIONS
+                // **************
+                const showAlerts = (heading, message) => {
+                  alertBox.classList.add("alert-danger");
+                  alertBox.classList.remove("invisible");
+                  alertHeading.innerText = heading;
+                  alertMsg.innerText = message;
                 };
-                
+
+                // Clear any previous alerts
+                const resetAlerts = () => {
+                  alertBox.classList.remove("alert-danger");
+                  alertBox.classList.add("invisible");
+                  alertHeading.innerText = "";
+                  alertMsg.innerText = "";
+                };
+
+                //
+                const generateResultsList = (startValue, endValue) => {
+                  const results = [];
+
+                  for (let i = startValue; i <= endValue; i++) {
+                    if (i === 0) {
+                      results.push(i);
+                    } else if (i % 3 === 0 && i % 5 === 0) {
+                      results.push("FizzBuzz");
+                    } else if (i % 5 === 0) {
+                      results.push("Buzz");
+                    } else if (i % 3 === 0) {
+                      results.push("Fizz");
+                    } else {
+                      results.push(i);
+                    }
+                  }
+                  return results;
+                };
+
+                // Display the results on the screen
+                const displayResultsList = (results) => {
+                  let tableRows = "";
+
+                  results.forEach((result) => {
+                    let className = "";
+                    if (result === "Fizz") {
+                      className = "fizz";
+                    } else if (result === "Buzz") {
+                      className = "buzz";
+                    } else if (result === "FizzBuzz") {
+                      className = "fizzbuzz";
+                    }
+
+                    tableRows += `
+                      <tr>
+                        <td class="${className}">${result}</td>
+                      </tr>
+                    `;
+                  });
+
+                  // Append the constructed table to the tbody tag with id="results"
+                  resultsTable.innerHTML = tableRows;
+                };
+
+                // Capture user input, then generate results list, and display results on page
+                const getUserInput = () => {
+                  // Clear any previous alerts
+                  resetAlerts();
+
+                  // Capture user inputs
+                  const startingValue = document.getElementById("startingValue").value;
+                  const endingValue = document.getElementById("endingValue").value;
+
+                  if (!startingValue || !endingValue) {
+                    // Show Error Message inside the alert box
+                    showAlerts(
+                      "Are you forgetting something?",
+                      "Range inputs must not be empty. Please enter a starting and an ending value."
+                    );
+                  }
+
+                  // Convert user inputs to numbers from the default of string
+                  const startingValueNumber = +startingValue;
+                  const endingValueNumber = +endingValue;
+
+                  if (
+                    typeof startingValueNumber !== "number" ||
+                    typeof endingValueNumber !== "number"
+                  ) {
+                    // Show error message inside the alert box
+                    // Show Error Message inside the alert box
+                    showAlerts(
+                      "Looks like there's a problem.",
+                      "Please enter valid integers in the input boxes above. Fractional & decimal numbers are not valid inputs."
+                    );
+                  } else {
+                    // If there are no errors, then generate the results list
+                    const resultsArray = generateResultsList(
+                      startingValueNumber,
+                      endingValueNumber
+                    );
+
+                    // Populate the DOM with the results from the resultsArray
+                    displayResultsList(resultsArray);
+                  }
+                };
+
+                // **************
+                // EVENT LISTENERS
+                // **************
+                submitBtn.addEventListener("click", getUserInput);
               </code>
             </pre>
           </div>
 
           <!-- Code Review & Description -->
           <div class="col-lg-4">
-            <p>SOme sub title</p>
-            <h5>helloWorld</h5>
-            <p>
-              This is a function that displays an alert message of "Hello World"
-              to the user.
-            </p>
+            <div class="alert alert-info">
+              <h4 class="alert-heading">Note</h4>
+              <hr />
+              <p>
+                The code snippet section can't display template literals. Please
+                see the full source code.
+              </p>
+            </div>
+            <!-- Code Reviews -->
+            <div class="border-bottom border-2 my-3">
+              <h5>Event Listener: submitBtn</h5>
+              <p>
+                Listens to the click action by the user on the "Show Numbers"
+                button, and executes the getUserInput function in JavaScript.
+              </p>
+            </div>
+            <!-- Code Reviews -->
+            <div class="border-bottom border-2 my-3">
+              <h5>Function: getUserInput</h5>
+              <p>
+                Captures the values entered by the user in the input field, and
+                passes it to other functions for processing and display.
+              </p>
+              <ul>
+                <li>
+                  Clears any previous alerts using the resetAlerts function.
+                </li>
+                <li>
+                  Checks for valid input value; if input value is invalid, shows
+                  an alert, otherwise passes the value to the
+                  generateResultsList function.
+                </li>
+                <li>
+                  The data returned by the generateResultsList function is
+                  stored in a variable called resultsArray, which is then passed
+                  to the displayResultsList function.
+                </li>
+              </ul>
+            </div>
+            <!-- Code Reviews -->
+            <div class="border-bottom border-2 my-3">
+              <h5>Function: generateResultsList</h5>
+              <p>
+                Accepts an array from the getUserInput function, loops over it,
+                and returns a new array where appropriate numbers have been
+                substituted for Fizz, Buzz, and FizzBuzz.
+              </p>
+              <ul>
+                <li>Loops over the user provided range of numbers.</li>
+                <li>
+                  Returns a results array that contains all numbers within the
+                  range, where multiples of 3, 5 and both 3 & 5 are substituted
+                  with Fizz, Buzz and FizzBuzz respectively.
+                </li>
+              </ul>
+            </div>
+            <!-- Code Reviews -->
+            <div class="border-bottom border-2 my-3">
+              <h5>Function: displayResultsList</h5>
+              <p>
+                Accepts the numbers array from the getValuesFromInputs function,
+                loops through the array and adds them to the table of results.
+              </p>
+              <ul>
+                <li>Creates an empty table rows field.</li>
+                <li>
+                  Uses the forEach array method to loop through the array.
+                </li>
+                <li>
+                  Adds each number in the array to the table as a row, applying
+                  styling to all Fizz, Buzz, and FizzBuzz entries..
+                </li>
+                <li>
+                  Appends the tableRows to the tbody tag, which displays the
+                  list to the user.
+                </li>
+              </ul>
+            </div>
+            <!-- Code Review -->
+            <div class="border-bottom border-2 my-3">
+              <h5>Helper Function: showAlerts</h5>
+              <p>
+                A Helper function that displays a red color alert box with error
+                information to the user.
+              </p>
+            </div>
+            <!-- Code Review -->
+            <div>
+              <h5>Helper Function: resetAlerts</h5>
+              <p>
+                This is another helper function that clears any previous alerts
+                from the DOM.
+              </p>
+            </div>
+            <!--  -->
           </div>
         </div>
       </div>
